@@ -1,5 +1,6 @@
 const express = require("express");
 const Player = require("./players.model");
+const upload = require("../../middlewares/file");
 
 const router = express.Router();
 
@@ -26,9 +27,14 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/create", async (req, res, next) => {
+//  lo que va dentro de upload single es lo ue va dentro de la imagen
+router.post("/create", upload.single("img"), async (req, res, next) => {
   try {
+    upload.single;
     const player = req.body;
+    if (req.file) {
+      player.img = req.file.path;
+    }
     const newPlayer = new Player(player);
     const created = await newPlayer.save();
     return res.status(201).json(created);
